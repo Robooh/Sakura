@@ -1,0 +1,264 @@
+/* ═══════════════════════════════════════════════════════════════
+   SAKURA — style.css
+   All main component styles: effects, placeholders, navigation
+   routing, sidebar, timeline, bento cards, footer.
+   ═══════════════════════════════════════════════════════════════ */
+
+
+/* ─────────────────────────────────────────────────────────────
+   1. GRAIN OVERLAY
+   Subtle noise texture applied over the entire viewport.
+───────────────────────────────────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.35;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   2. GLOW EFFECTS
+───────────────────────────────────────────────────────────── */
+.glow-neon {
+  box-shadow:
+    0 0 12px rgba(255, 77, 109, 0.55),
+    0 0 28px rgba(255, 77, 109, 0.30);
+}
+
+.glow-neon-text {
+  text-shadow:
+    0 0 6px  rgba(255, 77, 109, 0.70),
+    0 0 14px rgba(255, 77, 109, 0.40);
+}
+
+.glow-subtle {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   3. IMAGE PLACEHOLDER
+   Shown wherever a real <img> will eventually go.
+   Remove the class and add the <img> tag when assets are ready.
+───────────────────────────────────────────────────────────── */
+.img-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1.5px dashed rgba(255, 77, 109, 0.25);
+  color: rgba(168, 177, 195, 0.45);
+  font-family: 'Manrope', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.img-placeholder .material-symbols-outlined {
+  font-size: 28px;
+  opacity: 0.4;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   4. CSS-ONLY PAGE ROUTING
+   Each <section class="page"> is hidden by default.
+   Dashboard is the default visible page.
+   When a hash target is active, that section is shown and the
+   dashboard is hidden. JS will replace this with its own logic.
+───────────────────────────────────────────────────────────── */
+.page {
+  display: none;
+}
+
+/* Default page — dashboard always visible unless overridden */
+#page-dashboard {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Show any targeted page */
+#page-timeline:target,
+#page-settings:target,
+#page-profile:target {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hide dashboard when another page is targeted */
+body:has(#page-timeline:target) #page-dashboard,
+body:has(#page-settings:target) #page-dashboard,
+body:has(#page-profile:target)  #page-dashboard {
+  display: none;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   5. SIDEBAR NAV LINKS
+   .nav-link base state is muted; the active page link gets
+   a tinted background + neon colour. Dashboard is active by
+   default; other pages activate via :has(:target).
+───────────────────────────────────────────────────────────── */
+.nav-link {
+  color: #A8B1C3;
+  border: 1px solid transparent;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+/* Dashboard link — active by default */
+.nav-link[href="#page-dashboard"] {
+  background: rgba(255, 77, 109, 0.10);
+  color: #FF4D6D;
+  border-color: rgba(255, 77, 109, 0.30);
+  font-weight: 700;
+}
+
+/* Other links become active when their page is targeted */
+body:has(#page-timeline:target) .nav-link[href="#page-timeline"],
+body:has(#page-settings:target) .nav-link[href="#page-settings"],
+body:has(#page-profile:target)  .nav-link[href="#page-profile"] {
+  background: rgba(255, 77, 109, 0.10);
+  color: #FF4D6D;
+  border-color: rgba(255, 77, 109, 0.30);
+  font-weight: 700;
+}
+
+/* Deactivate dashboard link when another page is targeted */
+body:has(#page-timeline:target) .nav-link[href="#page-dashboard"],
+body:has(#page-settings:target) .nav-link[href="#page-dashboard"],
+body:has(#page-profile:target)  .nav-link[href="#page-dashboard"] {
+  background: transparent;
+  color: #A8B1C3;
+  border-color: transparent;
+  font-weight: 400;
+}
+
+/* Hover state for inactive links */
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #FFFFFF;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   6. TIMELINE VERTICAL CONNECTOR LINE
+   The continuous vertical line behind the event cards on the
+   Timeline Settings page (desktop only).
+───────────────────────────────────────────────────────────── */
+.timeline-list {
+  position: relative;
+}
+
+.timeline-list::before {
+  content: '';
+  position: absolute;
+  left: 88px;
+  top: 16px;
+  bottom: 16px;
+  width: 1px;
+  background: rgba(74, 77, 84, 0.50);
+  display: none; /* shown via mobile.css at sm+ breakpoint */
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   7. DASHBOARD — FLOW STATE TIMELINE
+   Minor adjustments not easily handled by Tailwind utilities.
+───────────────────────────────────────────────────────────── */
+
+/* Ensure the progress bar height is precise */
+.flow-timeline-bar {
+  height: 2px;
+  position: relative;
+}
+
+.flow-timeline-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #FF4D6D;
+  border-radius: 9999px;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   8. TIMELINE HEADER GRADIENT OVERLAY
+   Fades the placeholder/real background image into the page
+   background so text remains readable at all times.
+───────────────────────────────────────────────────────────── */
+.timeline-header-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(26, 28, 32, 0.95) 0%,
+    rgba(26, 28, 32, 0.75) 55%,
+    rgba(26, 28, 32, 0.60) 100%
+  );
+  z-index: 1;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   9. EVENT CARD — ACTIVE / CURRENT STATE
+   Scale + glow for the currently active timeline event.
+───────────────────────────────────────────────────────────── */
+.event-card-active {
+  transform: scale(1.01);
+  transition: transform 0.2s ease;
+}
+
+.event-card-active .event-card-accent-bar {
+  box-shadow: 0 0 10px rgba(255, 77, 109, 0.80);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   10. FOOTER
+───────────────────────────────────────────────────────────── */
+.sakura-footer {
+  border-top: 1px solid rgba(74, 77, 84, 0.15);
+}
+
+.sakura-footer a:hover {
+  color: #FF4D6D;
+  transition: color 0.15s ease;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   11. FILTER CHIP — ACTIVE STATE
+   The selected filter button on the Timeline page.
+───────────────────────────────────────────────────────────── */
+.filter-chip {
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.filter-chip.active {
+  background: rgba(255, 77, 109, 0.20);
+  color: #FF4D6D;
+  border-color: rgba(255, 77, 109, 0.50);
+}
+
+.filter-chip.active:hover {
+  background: rgba(255, 77, 109, 0.30);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   12. STUB PAGES (Settings / Profile)
+   Centred empty-state layout for pages not yet built.
+───────────────────────────────────────────────────────────── */
+.stub-page-icon {
+  font-size: 64px;
+  opacity: 0.25;
+  color: #A8B1C3;
+}
